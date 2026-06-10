@@ -36,7 +36,7 @@ const Appointments = () => {
       if (data.success) {
         setAppointments(data.appointments?.reverse() || []);
       } else {
-        toast.error(data.messages || "Failed to fetch appointments");
+        toast.error(data.message || "Failed to fetch appointments");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to fetch appointments");
