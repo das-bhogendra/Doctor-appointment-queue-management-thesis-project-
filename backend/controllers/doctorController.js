@@ -4,11 +4,7 @@ import jwt from "jsonwebtoken";
 import appointmentModel from "../models/appointmentModel.js";
 import mongoose from "mongoose";
 
-//
-// ===============================
-// CHANGE AVAILABILITY
-// ===============================
-//
+
 export const changeAvailability = async (req, res) => {
   try {
     const { docId } = req.body;
@@ -38,11 +34,7 @@ export const changeAvailability = async (req, res) => {
   }
 };
 
-//
-// ===============================
-// DOCTOR LIST
-// ===============================
-//
+
 export const doctorList = async (req, res) => {
   try {
     const doctors = await doctorModel
@@ -116,11 +108,7 @@ export const loginDoctor = async (req, res) => {
   }
 };
 
-//
-// ===============================
-// GET DOCTOR APPOINTMENTS
-// ===============================
-//
+
 export const appointmentsDoctor = async (req, res) => {
   try {
     const { docId } = req.user;
