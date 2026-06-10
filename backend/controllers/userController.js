@@ -208,29 +208,47 @@ export const updateUserProfile = async (req, res) => {
 //
 // ===============================
 // BOOK APPOINTMENT
-// ===============================
-//
 export const bookAppointment = async (req, res) => {
   try {
+    console.log("====================================");
+    console.log("🔥 BOOK APPOINTMENT API HIT");
+    console.log("====================================");
+
     const userId = req.user.id;
+    console.log("👤 USER ID:", userId);
+
     const { docId, slotDate, slotTime } = req.body;
+    console.log("📩 REQUEST BODY:", req.body);
+    console.log("📅 DOC ID:", docId);
+    console.log("⏰ SLOT DATE:", slotDate);
+    console.log("⏰ SLOT TIME:", slotTime);
 
     const doctor = await doctorModel.findById(docId);
 
+    console.log("====================================");
+    console.log("🧑‍⚕️ DOCTOR FETCH RESULT");
+    console.log("====================================");
+    console.log("DOCTOR FOUND:", doctor);
+
     if (!doctor) {
+      console.log("❌ DOCTOR NOT FOUND");
       return res.status(404).json({
         success: false,
         message: "Doctor not found",
       });
     }
 
+    console.log("💰 DOCTOR FEES FIELD:", doctor.fees);
+
     let slots = doctor.slots_booked || {};
+    console.log("📦 EXISTING SLOTS:", slots);
 
     if (!slots[slotDate]) {
       slots[slotDate] = [];
     }
 
     if (slots[slotDate].includes(slotTime)) {
+      console.log("⚠️ SLOT ALREADY BOOKED");
       return res.status(400).json({
         success: false,
         message: "Slot already booked",
@@ -243,19 +261,30 @@ export const bookAppointment = async (req, res) => {
       slots_booked: slots,
     });
 
+    console.log("🛠️ UPDATED SLOTS SAVED");
+
+    const amount = doctor.fees;
+    console.log("💵 FINAL AMOUNT VALUE:", amount);
+
     const appointment = await appointmentModel.create({
       userId,
       docId,
       slotDate,
       slotTime,
+      amount,
       date: Date.now(),
     });
+
+    console.log("✅ APPOINTMENT CREATED:", appointment);
+    console.log("====================================");
 
     return res.status(200).json({
       success: true,
       appointment,
     });
+
   } catch (error) {
+    console.log("🔥 ERROR OCCURRED:", error);
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -272,7 +301,9 @@ export const listAppointment = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const appointments = await appointmentModel.find({ userId });
+    const appointments = await appointmentModel
+      .find({ userId })
+      .populate("docId");   // ⭐ THIS IS THE FIX
 
     return res.status(200).json({
       success: true,
