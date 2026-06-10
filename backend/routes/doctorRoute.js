@@ -14,12 +14,8 @@ import { auth } from "../middlewares/auth.js";
 
 const doctorRouter = express.Router();
 
-//
-// ===============================
-// PUBLIC ROUTES
-// ===============================
-//
-doctorRouter.get("/list", doctorList);
+
+doctorRouter.get("/lists", doctorList);
 doctorRouter.post("/login", loginDoctor);
 
 //
